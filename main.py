@@ -1,1 +1,2 @@
 #main
+print('hello world')
