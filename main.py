@@ -1,13 +1,14 @@
 import numpy as np
 import matplotlib as plt
+from numpy.lib.function_base import append
 
 class menu:
 
     def __init__(self):
-        self.time = 0
-        self.country = ''
+        self.test_choice = ''
+        self.focus_group = ''
         self.data_analysis = ''
-    
+
 
     def print_instructions(self):
         '''
@@ -19,14 +20,20 @@ class menu:
         '''
         print(
 '''
-Where prompted please input the time period and country you wish to analyze.
-Once finished please input the way you wish to analyze the data.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is a school grade statistics analysis program.
+You will be prompted with various choices including what data set you wish to analyze and how you want to analyze it.
+Using this program you will be able to find any individual students grades for writing, reading or math.
+You will also be able to find a students average across all three.
+Other search criteria include:
+Searching based off ethnicity, what students ate for lunch, parents schooling and whether test prep was completed.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ''')
 
 
     def print_menu_input(self):
         '''
-        Summary: A function to ask the user if they are content with their selections of time period, country and data 
+        Summary: A function to ask the user if they are content with their selections of data and data 
         analysis type. If the user inputs no, the function will return False which is read by the program telling it to 
         re-request inputs. 
         
@@ -35,9 +42,9 @@ Once finished please input the way you wish to analyze the data.
         Returns: True or False
         '''
         print(f'''
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-CHOSEN MENU OPTIONS: Time Period: {self.time}, Country: {self.country}, Analysis type {self.data_analysis}
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~''')
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CHOSEN MENU OPTIONS: Test score: {self.test_choice}, Focus group: {self.focus_group}, Analysis type {self.data_analysis}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~''')
         print()
         valid_input = False
         while valid_input == False:
@@ -50,7 +57,7 @@ CHOSEN MENU OPTIONS: Time Period: {self.time}, Country: {self.country}, Analysis
                 continue
 
 
-    def request_inputs(self, countries):
+    def request_inputs(self):
         '''
         Summary: Function to request the inputs for time period and country from ther user.
         
@@ -60,54 +67,49 @@ CHOSEN MENU OPTIONS: Time Period: {self.time}, Country: {self.country}, Analysis
         '''
         valid_input = False
         while valid_input == False:
-            self.time = input(f'Please input the time period you wish to analyze [2000-2006, 2007-2013, 2014-2020 or all] -> ') #Asks for an time period input
+            self.test_choice = input('Please input the test you wish to analyze [Math, Writing, Reading] -> ').title() #Asks for an test input
             print()
-            if self.time not in ['2000-2006', '2007-2013', '2014-2020', 'All', 'all']:  #If the input is not in this list the program asks for a new one
+            if self.test_choice not in ['Math', 'Writing', 'Reading']:  #If the input is not in this list the program asks for a new one
                 print('Invalid entry, please try again')
                 print()
                 continue
-            valid_input = True
-
-        valid_input = False
+            break
+            
         while valid_input == False:
-            self.country = input(f'Now please input the country you\'d wish to take data from -> ').title() #Asks for a country input
+            self.focus_group = input('Now please input the focus group you wish to analyze [Gender, Ethnicity, Parent Education, Lunch, Test Prep] -> ').title() #Ask for focus group input
             print()
-            if self.country not in countries:   #If the input is not within the countries list the program asks for a new one
-                print('Invalid entry, please try agan')
-                print()
-                continue
-            valid_input = True    
-        return self.time, self.country
-
-
-    def request_data_analysis(self):
-        '''
-        Summary: Function to request the input of a data analysis type for the section of data a user chose to analyze.
-
-        Parameters: self
-
-        Returns: self.data_analysis which is a variable containing the user's choice
-        '''
-        valid_input = False
-        while valid_input == False:
-            #Asks for a analysis type input
-            self.data_analysis = input('Finally please input the way you\' wish to analyze the chosen data set. Options include: [Mean, Max, Min and Percent Change]. input here -> ')
-            #If not part of this list the program asks for a new one
-            if self.data_analysis not in ['Mean','mean','Max','max','Min','min','Percent Change','Percent change','percent Change','percent change']:
+            if self.focus_group not in ['Gender', 'Ethnicity', 'Parent Education', 'Lunch', 'Test Prep']:
                 print('Invalid entry, please try again')
                 print()
                 continue
-            valid_input = True
-        return self.data_analysis 
+            break
+
+        while valid_input == False:
+            self.data_analysis = input('Finally please input the way you would like to analyze the data you\'ve chosen [Highest Mark, Lowest Mark, Test Average] -> ').title() #Asks for how the user wishes to analyze the data
+            print()
+            if self.data_analysis not in ['Highest Mark', 'Lowest Mark', 'Test Average']:
+                print('Invalid entry, please try again')
+                print()
+                continue
+            break
+
+        return self.test_choice, self.focus_group, self.data_analysis
+
+
+    
 
 
 #Importing Data
-array_2000_2006 = np.genfromtxt('populations 2000-2006.csv', skip_header=(True), delimiter=(','), dtype=None)   #Population data for 2000-2006
-array_2007_2013 = np.genfromtxt('populations 2007-2013.csv', skip_header=(True), delimiter=(','), dtype=None)   #Population data for 2007-2013
-array_2014_2020 = np.genfromtxt('populations 2014-2020.csv', skip_header=(True), delimiter=(','), dtype=None)   #Population data for 2014-2020
+math_scores = np.genfromtxt('Math Scores.csv', skip_header=(True), delimiter=(','), dtype=str)   #Population data for 2000-2006
+reading_scores = np.genfromtxt('Reading Scores.csv', skip_header=(True), delimiter=(','), dtype=str)   #Population data for 2007-2013
+writing_scores = np.genfromtxt('Writing Scores.csv', skip_header=(True), delimiter=(','), dtype=str)   #Population data for 2014-2020
+
+print(math_scores)
+print(reading_scores)
+print(writing_scores)
 
 
-def array_generator(country_name, time_period):
+def array_generator(chosen_test, focus_group):
     '''
     Summary: A function to scan through the attached CSV files and pull out the chosen data for the user.
     The function looks through the first column till it find a row starting with the country the user chose
@@ -117,43 +119,52 @@ def array_generator(country_name, time_period):
 
     Returns: A single row array pretaining to the chosen country and time period
     '''
-    func_dict={                                         #Dictionary containg keys based on inputed time periods and values for the file they pretain to
-        '2000-2006':array_2000_2006,
-        '2007-2013':array_2007_2013,
-        '2014-2020':array_2014_2020}
+    tests_dict={                                         #Dictionary containg keys based on inputed time periods and values for the file they pretain to
+        'Math':math_scores,
+        'Reading':reading_scores,
+        'Writing':writing_scores}
     
-    for i in range(len(func_dict[time_period][:,0])):   #For loop used to search through the first column till the specified country is found
-        if country_name == func_dict[time_period][i,0]:
-            return func_dict[time_period][i,1:]         #Returning the row for said country
+    focus_dict={
+        'Gender':1,
+        'Ethnicity':2,
+        'Parent Education':3,
+        'Lunch':4,
+        'Test Prep':5}
+    
+    computing_array = np.array([[' ',' ']])
+    for i in range(len(tests_dict[chosen_test])):
+        concatenating_array = np.array(tests_dict[chosen_test][i,focus_dict[focus_group]:7:(6-(focus_dict[focus_group]))],ndmin=2, dtype=None)
+        computing_array = np.concatenate((computing_array, concatenating_array), axis=0)
+    computing_array = np.delete(computing_array, 0, 0)
+    print(computing_array)
+    
+    return computing_array
 
-#creating a list of valid countries from the first column of one of the CSV files (all countries are the same within them)
-countries_list = []
-for i in range(0,193): 
-    countries_list.append(array_2000_2006[i,0])
+
 
 #exit clause for the menu loop
 exit_clause = False
 
-user_inputs = menu()                                                            #Creating a menu class instance
-user_inputs.print_instructions()                                                #Calling the print_instructions function
-while exit_clause == False:                                                     #While loop that checks the boolean value that is returned by the function print_menu_input
-    user_time_and_country = list(user_inputs.request_inputs(countries_list))    #Creates a list with the first enrty being the user chosen time and the second entry being the user chosen country
-    user_analysis_choice = user_inputs.request_data_analysis()                  #Gets the users choice for analysis of the data
-    exit_clause = user_inputs.print_menu_input()                                #Obtains the boolean value from whether the user was satisfied with their choice
+get_inputs = menu()                                         #Creating a menu class instance
+get_inputs.print_instructions()                             #Calling the print_instructions function
+while exit_clause == False:                                 #While loop that checks the boolean value that is returned by the function print_menu_input
+    user_chosen_inputs = list(get_inputs.request_inputs())  #Creates a list with the first enrty being the user chosen test, second entry being the user chosen focus group and third being the data analysis type
+    exit_clause = get_inputs.print_menu_input()             #Obtains the boolean value from whether the user was satisfied with their choice
 
 #Creating the computing array
-if user_time_and_country[0] == 'All' or user_time_and_country[0] == 'all': #checking if the user selected all for their time period
-    #This line calls the array_generator function three times if the user selected all for their time period. 
-    #Each call of the function uses the same country but each individual time period
-    #These three arrays are then stored in the computing_array variable to be used for future computations
-    computing_array = np.array([array_generator(user_time_and_country[1],'2000-2006' ),array_generator(user_time_and_country[1], '2007-2013'),array_generator(user_time_and_country[1], '2014-2020')])
-else:
-    computing_array = array_generator(user_time_and_country[1], user_time_and_country[0]) #If the user did not select all only one array is stored in computing array
+computing_array = array_generator(user_chosen_inputs[0], user_chosen_inputs[1]) 
 
+if user_chosen_inputs[2] == 'Max':
+    user_wanted_data = np.max(computing_array, axis=0)
+elif user_chosen_inputs[2] == 'Min':
+    user_wanted_data = np.min(computing_array, axis=0)
+elif user_chosen_inputs[2] == 'Test Average':
+    user_wanted_data = np.average(computing_array, axis=0)
 
+print(user_wanted_data)
 
-#Okay Ethan I've set it up so that the user will choose the country and the analysis type
-#The two variables you should need to use are "computing_array" (lines: 99 and 101) and "user_analysis_choice" (line: 95)
-#I've also set up the four functions people are allowed to choose being mean, max, min, and percent change for when you want to work with the computng array
-#have fun
-#-Big Man
+#Okay big man I've got the menu up, the computing array forming and what not but you now get to figure out how to deal with average max and min
+#The computing array is still stored under computing_array and the data analysis type is index 2 of user_chosen_input
+#The code block right above this was me attempting to do average max and min but it didn't work so give it shot and have fun with the graphs
+#Also remind me to comment this shit later I just don't wanna deal with my shitty I key
+#see ya nerd
