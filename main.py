@@ -34,7 +34,7 @@ CHOSEN MENU OPTIONS:
         while valid_input == False:
             yes_or_no = input('Are you satisfed with this input? (yes/no) -> ') #Asks if the user is ok with their choice
             print()
-            if yes_or_no == 'no' or yes_or_no == 'No': return False             #If not reutrn False
+            if yes_or_no == 'no' or yes_or_no == 'No': return False             #If not return False
             elif yes_or_no == 'Yes' or yes_or_no == 'yes': return True          #If yes return True
             else:
                 print('Invalid entry, please try again')
@@ -43,7 +43,7 @@ CHOSEN MENU OPTIONS:
 
     def request_inputs(self):
         '''
-        Summary: Function to request the inputs for time period and country from ther user.
+        Summary: Function to request the inputs for time period and country from the user.
         
         Parameters: Self, List of countries 
 
@@ -181,15 +181,15 @@ def prep_arrays_for_graphing(input_list):
 writing_score_array=np.genfromtxt('Writing Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
 math_score_array=np.genfromtxt('Reading Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
 reading_score_array=np.genfromtxt('Math Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
-#writing_score_array=np.loadtxt(open('.venv\Writing Scores.csv'),dtype={'names':('Student Number','Gender','Race','Parental Education','Lunch','Test Prep','Grade'),'formats':('f4','S20','S20','S20','S20','S20','f4')},delimiter=','or'\n',skiprows=1)
-#math_scores_array=np.loadtxt(open('.venv\Math Scores.csv'),dtype={'names':('Student Number','Gender','Race','Parental Education','Lunch','Test Prep','Grade'),'formats':('f4','S20','S20','S20','S20','S20','f4')},delimiter=','or'\n',skiprows=1)
-#reading_scores_array=np.loadtxt(open('.venv\Reading Scores.csv'),dtype={'names':('Student Number','Gender','Race','Parental Education','Lunch','Test Prep','Grade'),'formats':('f4','S20','S20','S20','S20','S20','f4')},delimiter=','or'\n',skiprows=1)
+#writing_score_array=np.genfromtxt('.venv\Writing Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
+#math_score_array=np.genfromtxt('.venv\Math Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
+#reading_score_array=np.genfromtxt('.venv\Reading Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
 
 #exit clause for the menu loop
 exit_clause = False
 focus_group_choices={'Gender':['male','female'],'Ethnicity':['group A','group B','group C','group D','group E'],'Parent Education':["bachelor's degree",'some college',"master's degree","associate's degree",'high school'],'Lunch':['standard','free/reduced'],'Test Prep':['none','completed']}
 
-#Main code block, everything below here is managing the menu class, print statments and calling graphing functions DO NOT ADD GRAPHING FUNCTIONS TO THIS FILE ITS ALREADY TOO LONG!!!!!!!!
+#Main code block, everything below here is managing the menu class, print statements and calling graphing functions DO NOT ADD GRAPHING FUNCTIONS TO THIS FILE ITS ALREADY TOO LONG!!!!!!!!
 #I made a new file for it :)
 print('''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -235,7 +235,8 @@ computeing_array_1 = data_list_generator(focus_group_choices[user_inputs_1.focus
 
 list_of_calculated_values = []
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-print(f'Restults for {user_inputs_1.data_analysis}s of the focus groups in the {user_inputs_1.test_choice} test')
+print(f'Results for {user_inputs_1.data_analysis}s of the focus groups in the {user_inputs_1.test_choice} test')
+print('---------------------------------------------------------------------------')
 for group in focus_group_choices[user_inputs_1.focus_group]:
     calculated_data = analysis(sort_list(computeing_array_1, group), user_inputs_1.data_analysis)
     list_of_calculated_values.append(calculated_data)
@@ -247,7 +248,7 @@ if num_of_graphs == 2:
     computeing_array_2 = data_list_generator(focus_group_choices[user_inputs_2.focus_group],user_inputs_2.test_choice) #a list of only the useful values are created using the data_list_generator
     list_of_calculated_values = []
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    print(f'Restults for {user_inputs_2.data_analysis}s of the focus groups in the {user_inputs_2.test_choice} test')
+    print(f'Results for {user_inputs_2.data_analysis}s of the focus groups in the {user_inputs_2.test_choice} test')
     print('---------------------------------------------------------------------------')
     for group in focus_group_choices[user_inputs_2.focus_group]:
         calculated_data = analysis(sort_list(computeing_array_2, group), user_inputs_2.data_analysis)
@@ -255,3 +256,9 @@ if num_of_graphs == 2:
         print(f'{user_inputs_2.data_analysis} for {group}: {list_of_calculated_values[focus_group_choices[user_inputs_2.focus_group].index(group)]:.2f}')
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     print(f'{user_inputs_2.graph_choice} goes here')
+
+#just updated lines 184-186 so that the array stuff works on my pc
+#I also fixed two spelling mistakes and added a print on line 239 cuss it wasn't printing the dotted line for the first calculations, only the second
+#amazing work with the menu, it looks perfect. Exactly what I had in my head
+#nice work fixing the arrays, i swapped to the np.loadtxt cuss i found that i just worked with less headaces and was willing to deal with the data type issues, while
+#i was googleing how to fix the data types I fell into a hole with the encoding and decoding with the 'utf-8' shit and honestly didn't wanna learn how to use it, so great work with getting that fixed
