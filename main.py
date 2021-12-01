@@ -1,5 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.core.fromnumeric import sort
+from graphing_functions import histogram
+from graphing_functions import bar_graph
+from graphing_functions import scatterplot
 
 
 
@@ -156,7 +160,7 @@ def sort_list(input_list,keyword):
 
 
 
-def prep_arrays_for_graphing(input_list):
+def histogram_values(input_list):
     '''Summary: A function that counts each time any of the values within the input_list is between 0-100 and returns a list of 100 values, where each value is the number of times the value was found in the input_list
 
     Args:
@@ -168,12 +172,12 @@ def prep_arrays_for_graphing(input_list):
     for percent in range(0,101):    #runs through each value between 0-100
         count=0                     #resets the counter
         for element in input_list:  #check each value in input_list
-            if percent == element:
+            if percent == int(element):
                 count+=1            #if the value in input_list is the same as the percent then the count is increased
         output_list.append(count)   #and appends the count to output_list
     #print('prep arrays function return') #~~Evan Testing~~#
     #print(np.array(output_list)) #~~Evan Testing~~#
-    return np.array(output_list)    #returns the output_list as an array
+    return (output_list)    #returns the output_list as an array
 
 
 
@@ -187,7 +191,13 @@ reading_score_array=np.genfromtxt('Math Scores.csv',skip_header = True, delimite
 
 #exit clause for the menu loop
 exit_clause = False
-focus_group_choices={'Gender':['male','female'],'Ethnicity':['group A','group B','group C','group D','group E'],'Parent Education':["bachelor's degree",'some college',"master's degree","associate's degree",'high school'],'Lunch':['standard','free/reduced'],'Test Prep':['none','completed']}
+focus_group_choices={
+    'Gender':['male','female'],
+    'Ethnicity':['group A','group B','group C','group D','group E'],
+    'Parent Education':["bachelor's degree",'some college',"master's degree","associate's degree",'high school'],
+    'Lunch':['standard','free/reduced'],
+    'Test Prep':['none','completed']
+    }
 
 #Main code block, everything below here is managing the menu class, print statements and calling graphing functions DO NOT ADD GRAPHING FUNCTIONS TO THIS FILE ITS ALREADY TOO LONG!!!!!!!!
 #I made a new file for it :)
@@ -202,10 +212,11 @@ Searching based off ethnicity, what students ate for lunch, parents schooling an
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ''')
 while exit_clause == False:
-    num_of_graphs = int(input('How many graphs would you like to compare? [1 or 2] -> '))
-    if num_of_graphs not in [1,2]:
+    num_of_graphs = input('How many graphs would you like to compare? [1 or 2] -> ')
+    if num_of_graphs not in ['1','2']:
         print('Invalid entry, please try again')
         continue
+    num_of_graphs = int(num_of_graphs)
     print()
     break
     
@@ -231,8 +242,16 @@ if num_of_graphs == 2:
         user_inputs_2.request_inputs()
         exit_clause = user_inputs_2.print_menu_input()
 
-computeing_array_1 = data_list_generator(focus_group_choices[user_inputs_1.focus_group],user_inputs_1.test_choice) #a list of only the useful values are created using the data_list_generator
+plt.figure()
 
+graph_choices = {
+    'Histogram':plt.bar,
+    'Bar Graph':plt.bar
+    
+}
+
+#GRAPH 1
+computeing_array_1 = data_list_generator(focus_group_choices[user_inputs_1.focus_group],user_inputs_1.test_choice) #a list of only the useful values are created using the data_list_generator
 list_of_calculated_values = []
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 print(f'Results for {user_inputs_1.data_analysis}s of the focus groups in the {user_inputs_1.test_choice} test')
@@ -242,8 +261,30 @@ for group in focus_group_choices[user_inputs_1.focus_group]:
     list_of_calculated_values.append(calculated_data)
     print(f'{user_inputs_1.data_analysis} for {group}: {list_of_calculated_values[focus_group_choices[user_inputs_1.focus_group].index(group)]:.2f}')
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-print(f'{user_inputs_1.graph_choice} goes here')
 
+if user_inputs_1.graph_choice == 'Bar Graph':
+    values_to_graph = []
+    for group in focus_group_choices[user_inputs_1.focus_group]:
+        sorted_list = sort_list(computeing_array_1, group)
+        count = 0
+        for i in sorted_list:
+            if int(i) >= 60:
+                count += 1
+        values_to_graph.append(count)
+        names_to_graph = focus_group_choices[user_inputs_1.focus_group]
+    bar_graph(values_to_graph, names_to_graph, num_of_graphs, 1, f'Total Passing Grades by Focus Group')
+
+if user_inputs_1.graph_choice == 'Histogram':
+    values_to_graph = []
+    for group in focus_group_choices[user_inputs_1.focus_group]:
+        sorted_list = sort_list(computeing_array_1, group)    
+        values_to_graph = histogram_values(sorted_list)
+        names_to_graph = np.linspace(0, 100, 101)
+    histogram(values_to_graph, names_to_graph, num_of_graphs, 1, 'Tallies of each grade recieved')
+
+#INSERT USER CHOSEN GRAPH HERE
+
+#GRAPH 2
 if num_of_graphs == 2:
     computeing_array_2 = data_list_generator(focus_group_choices[user_inputs_2.focus_group],user_inputs_2.test_choice) #a list of only the useful values are created using the data_list_generator
     list_of_calculated_values = []
@@ -255,7 +296,34 @@ if num_of_graphs == 2:
         list_of_calculated_values.append(calculated_data)
         print(f'{user_inputs_2.data_analysis} for {group}: {list_of_calculated_values[focus_group_choices[user_inputs_2.focus_group].index(group)]:.2f}')
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    print(f'{user_inputs_2.graph_choice} goes here')
+    
+    if user_inputs_2.graph_choice == 'Bar Graph':
+        values_to_graph = []
+        for group in focus_group_choices[user_inputs_2.focus_group]:
+            sorted_list = sort_list(computeing_array_2, group)
+            count = 0
+            for i in sorted_list:
+                if int(i) >= 60:
+                    count += 1
+            values_to_graph.append(count)
+            names_to_graph = focus_group_choices[user_inputs_2.focus_group]
+        bar_graph(values_to_graph, names_to_graph, num_of_graphs, 2, f'Total Passing Grades by Focus Group')
+
+    if user_inputs_1.graph_choice == 'Histogram':
+        values_to_graph = []
+        for group in focus_group_choices[user_inputs_2.focus_group]:
+            sorted_list = sort_list(computeing_array_2, group)    
+            values_to_graph = histogram_values(sorted_list)
+            names_to_graph = np.linspace(0, 100, 101)
+        histogram(values_to_graph, names_to_graph, num_of_graphs, 2, 'Tallies of each grade recieved')
+
+
+    
+    #INSERT USER CHOSEN GRAPH HERE
+
+#INSERT SCATTERPLOT HERE
+
+plt.show()
 
 #just updated lines 184-186 so that the array stuff works on my pc
 #I also fixed two spelling mistakes and added a print on line 239 cuss it wasn't printing the dotted line for the first calculations, only the second
