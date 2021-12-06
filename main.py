@@ -351,4 +351,5 @@ plt.show()
 #   (ur also gonna need to unhash line 5 if u wanna try the scatter for the function import)
 # i've commented most of my lines, ik most of urs is done but some stuff isn't commented yet so when you get the chance if u can finish the commenting that would be coooool
 #also removed the import sort line at like line 4 or som, we weren't using it so idk
+#i also think we should just move the graphing functions form graphing_funcitons.py to the main.py, just so the markers have an easyier time but it works as is
 #i'd say after we finish comments and make the write up we are done, unless u can think of something or do think we need the scatter
