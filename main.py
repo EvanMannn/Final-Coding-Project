@@ -1,9 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from numpy.core.fromnumeric import sort
 from graphing_functions import histogram
 from graphing_functions import bar_graph
-from graphing_functions import scatterplot
+#from graphing_functions import scatter
 
 
 
@@ -54,6 +53,13 @@ CHOSEN MENU OPTIONS:
         Returns: Tuple containing self.time and self.country
         '''
         valid_input = False
+        #while valid_input == False:
+        #    self.see_scatterplot = input('Would you like to see the scatterplot of all data? [yes or no] -> ').title()
+        #    if self.see_scatterplot not in ['Yes','No']:
+        #        print('Invalid entry, please try again')
+        #        continue
+        #    print()
+        #    break
         while valid_input == False:
             self.test_choice = input('Please input the test you wish to analyze [Math, Writing, Reading] -> ').title() #Asks for an test input
             print()
@@ -161,23 +167,32 @@ def sort_list(input_list,keyword):
 
 
 def histogram_values(input_list):
-    '''Summary: A function that counts each time any of the values within the input_list is between 0-100 and returns a list of 100 values, where each value is the number of times the value was found in the input_list
+    '''Summary: A function that counts each time any of the values within the input_list is between 0-100 and returns a list of 20 values, where each value is the number of times the value was found in the input_list that are within 5 unit intervals
 
     Args:
         input_list (list): A list where the values are floats that are between 0-100
 
     Returns:
-        array: an array of 100 floats, where it's position is the "requested value" and the value being the number of times that requested value was found in the input_list'''
+        list: a list of 20 values that corespond to the number of grades within each 5% interval. For example: if the input_list had the values [12,5,13] then the output would have a '1' and a '2' in the first and second
+                position with zeros in the other 18 postions'''
+    percent_group_list=[5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,101]
     output_list=[]
-    for percent in range(0,101):    #runs through each value between 0-100
-        count=0                     #resets the counter
-        for element in input_list:  #check each value in input_list
-            if percent == int(element):
-                count+=1            #if the value in input_list is the same as the percent then the count is increased
-        output_list.append(count)   #and appends the count to output_list
-    #print('prep arrays function return') #~~Evan Testing~~#
-    #print(np.array(output_list)) #~~Evan Testing~~#
+    count=0
+    for percent in range(percent_group_list[0]):
+            for element in input_list:
+                if int(element) == percent:
+                    count+=1
+    output_list.append(count)
+    for group_pos in range(1,20):
+        count=0
+        for percent in range(percent_group_list[group_pos-1],percent_group_list[group_pos]):
+            for element in input_list:
+                if int(element) == percent:
+                    count+=1
+        output_list.append(count)
     return (output_list)    #returns the output_list as an array
+
+
 
 
 
@@ -219,15 +234,6 @@ while exit_clause == False:
     num_of_graphs = int(num_of_graphs)
     print()
     break
-    
-
-while exit_clause == False:
-    see_scatterplot = input('would you like to see the scatterplot of all data? [yes or no] -> ').title()
-    if see_scatterplot not in ['Yes','No']:
-        print('Invalid entry, please try again')
-        continue
-    print()
-    break
 
 user_inputs_1 = menu()
 while exit_clause == False:    
@@ -236,13 +242,11 @@ while exit_clause == False:
 
 exit_clause = False
 if num_of_graphs == 2:
-    print('Now select your second input options')
+    print('\nNow select your second input options')
     user_inputs_2 = menu()
     while exit_clause == False:     
         user_inputs_2.request_inputs()
         exit_clause = user_inputs_2.print_menu_input()
-
-plt.figure()
 
 graph_choices = {
     'Histogram':plt.bar,
@@ -262,30 +266,35 @@ for group in focus_group_choices[user_inputs_1.focus_group]:
     print(f'{user_inputs_1.data_analysis} for {group}: {list_of_calculated_values[focus_group_choices[user_inputs_1.focus_group].index(group)]:.2f}')
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
-if user_inputs_1.graph_choice == 'Bar Graph':
+if user_inputs_1.graph_choice == 'Bar Graph': #creates a Bar graph if the user requests it for the first data
+    plt.figure(1)
     values_to_graph = []
-    for group in focus_group_choices[user_inputs_1.focus_group]:
-        sorted_list = sort_list(computeing_array_1, group)
+    for group in focus_group_choices[user_inputs_1.focus_group]:    #this grabs each of the groups (example: male and female)
+        sorted_list = sort_list(computeing_array_1, group)          #creates a list of the grades for that group in the requested data set
         count = 0
-        for i in sorted_list:
+        for i in sorted_list:   #counts each of the passing grades (above 59%)
             if int(i) >= 60:
                 count += 1
-        values_to_graph.append(count)
-        names_to_graph = focus_group_choices[user_inputs_1.focus_group]
-    bar_graph(values_to_graph, names_to_graph, num_of_graphs, 1, f'Total Passing Grades by Focus Group')
+        values_to_graph.append(count)   #adds the count to a list of the other counts
+        names_to_graph = focus_group_choices[user_inputs_1.focus_group] #grabs the name of focus group for the title (ex:'Gender')
+    bar_graph(values_to_graph, names_to_graph, str(f'Number of Total Passing Grades for {user_inputs_1.focus_group}'))  
+    #creates the bar graph with the function 'bar_graph' using the y values 'values_to_graph', the x values 'names_to_graph', and the title as the last argument
 
-if user_inputs_1.graph_choice == 'Histogram':
+if user_inputs_1.graph_choice == 'Histogram': #creates a histogram graph if the user requests it for the first data
+    plt.figure(1)
     values_to_graph = []
-    for group in focus_group_choices[user_inputs_1.focus_group]:
-        sorted_list = sort_list(computeing_array_1, group)    
-        values_to_graph = histogram_values(sorted_list)
-        names_to_graph = np.linspace(0, 100, 101)
-    histogram(values_to_graph, names_to_graph, num_of_graphs, 1, 'Tallies of each grade recieved')
+    count=0
+    for group in focus_group_choices[user_inputs_1.focus_group]:    #this grabs each of the groups (example: male and female)
+        count+=1
+        sorted_list = sort_list(computeing_array_1, group)      #creates a list of the grades for that group in the requested data set
+        values_to_graph = histogram_values(sorted_list)         #creates a list of the number of grades within each 5% intervul
+        names_to_graph = [5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100]  #list for the x_values
+        histogram(values_to_graph, names_to_graph, len(focus_group_choices[user_inputs_1.focus_group]), count, str(f' {group} grades',))
+        #creates the histogram using the y_values created earlyier as 'values_to_graph', the x_values as 'names_to_graph', the total number of subgraphs in the len() function
+        #'count' is the position of the current subplot, and last is part of the title for the graph
 
-#INSERT USER CHOSEN GRAPH HERE
-
-#GRAPH 2
-if num_of_graphs == 2:
+if num_of_graphs == 2: #the same two steps are repeated here but for the second graphs and second data sets
+    plt.figure(2)
     computeing_array_2 = data_list_generator(focus_group_choices[user_inputs_2.focus_group],user_inputs_2.test_choice) #a list of only the useful values are created using the data_list_generator
     list_of_calculated_values = []
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -297,36 +306,49 @@ if num_of_graphs == 2:
         print(f'{user_inputs_2.data_analysis} for {group}: {list_of_calculated_values[focus_group_choices[user_inputs_2.focus_group].index(group)]:.2f}')
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     
-    if user_inputs_2.graph_choice == 'Bar Graph':
+    if user_inputs_2.graph_choice == 'Bar Graph': #creates a Bar graph if the user requests it for the second data
         values_to_graph = []
-        for group in focus_group_choices[user_inputs_2.focus_group]:
-            sorted_list = sort_list(computeing_array_2, group)
+        plt.figure(2)
+        for group in focus_group_choices[user_inputs_2.focus_group]:    #this grabs each of the groups (example: male and female)
+            sorted_list = sort_list(computeing_array_2, group)          #creates a list of the grades for that group in the requested data set
             count = 0
-            for i in sorted_list:
+            for i in sorted_list:    #counts each of the passing grades (above 59%)
                 if int(i) >= 60:
                     count += 1
-            values_to_graph.append(count)
-            names_to_graph = focus_group_choices[user_inputs_2.focus_group]
-        bar_graph(values_to_graph, names_to_graph, num_of_graphs, 2, f'Total Passing Grades by Focus Group')
+            values_to_graph.append(count)   #adds the count to a list of the other counts
+            names_to_graph = focus_group_choices[user_inputs_2.focus_group] #grabs the name of focus group for the title (ex:'Gender')
+        bar_graph(values_to_graph, names_to_graph, str(f'Number of Total Passing Grades for {user_inputs_2.focus_group}'))
+        #creates the bar graph with the function 'bar_graph' using the y values 'values_to_graph', the x values 'names_to_graph', and the title as the last argument
 
-    if user_inputs_1.graph_choice == 'Histogram':
+    if user_inputs_2.graph_choice == 'Histogram':   #creates a histogram graph if the user requests it for the second data
+        plt.figure(2)
         values_to_graph = []
-        for group in focus_group_choices[user_inputs_2.focus_group]:
-            sorted_list = sort_list(computeing_array_2, group)    
-            values_to_graph = histogram_values(sorted_list)
-            names_to_graph = np.linspace(0, 100, 101)
-        histogram(values_to_graph, names_to_graph, num_of_graphs, 2, 'Tallies of each grade recieved')
+        pos_count=0
+        for group in focus_group_choices[user_inputs_2.focus_group]:    #this grabs each of the groups (example: male and female)
+            pos_count+=1
+            sorted_list = sort_list(computeing_array_2, group)          #creates a list of the grades for that group in the requested data set
+            values_to_graph = histogram_values(sorted_list)             #creates a list of the number of grades within each 5% intervul
+            names_to_graph = [5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100] #list for the x_values
+            histogram(values_to_graph, names_to_graph, len(focus_group_choices[user_inputs_2.focus_group]), pos_count, str(f' {group} grades',))
+            #creates the histogram using the y_values created earlyier as 'values_to_graph', the x_values as 'names_to_graph', the total number of subgraphs in the len() function
+            #'count' is the position of the current subplot, and last is part of the title for the graph
 
-
-    
-    #INSERT USER CHOSEN GRAPH HERE
-
-#INSERT SCATTERPLOT HERE
+#if user_inputs_1.see_scatterplot=='Yes':
+#    if user_inputs_1.graph_choice=='Bar Graph' or user_inputs_1.graph_choice == 'Histogram':
+#        plt.figure(3)
+#    else:
+#        plt.figure(2)
+#    for group in focus_group_choices[user_inputs_1.focus_group]:
+#        scatter(sort_list(computeing_array_1, group),list(range(1,len(sort_list(computeing_array_1, group))+1)))
+#
 
 plt.show()
 
-#just updated lines 184-186 so that the array stuff works on my pc
-#I also fixed two spelling mistakes and added a print on line 239 cuss it wasn't printing the dotted line for the first calculations, only the second
-#amazing work with the menu, it looks perfect. Exactly what I had in my head
-#nice work fixing the arrays, i swapped to the np.loadtxt cuss i found that i just worked with less headaces and was willing to deal with the data type issues, while
-#i was googleing how to fix the data types I fell into a hole with the encoding and decoding with the 'utf-8' shit and honestly didn't wanna learn how to use it, so great work with getting that fixed
+#so i finished the graphs to 1.work (as it they don't break and the histogram is now measuring in 5% intervals), and 2.look pretty
+#I changed the functionality of the histogram_values function, messed with lines 270-335, and made some changes to the graphing_functions.py
+#I was also trying to set up the scatter graph, then while testing i realized that the scatter will look super stupid and display like no relevant information, so if u wanna try to get that going
+#   I left my work hashed out in lines 57-63 (i moved the input to ask for a scatter into the class so that it would ask twice if 2 graphs were selected by user) lines 337-344, and lines 25-26 in the graphing_functions.py
+#   (ur also gonna need to unhash line 5 if u wanna try the scatter for the function import)
+# i've commented most of my lines, ik most of urs is done but some stuff isn't commented yet so when you get the chance if u can finish the commenting that would be coooool
+#also removed the import sort line at like line 4 or som, we weren't using it so idk
+#i'd say after we finish comments and make the write up we are done, unless u can think of something or do think we need the scatter
