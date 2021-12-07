@@ -7,7 +7,7 @@ from graphing_functions import scatterplot
 
 
 
-class menu:
+class Menu:
 
     def __init__(self):
         self.test_choice = ''
@@ -229,7 +229,7 @@ while exit_clause == False:
     print()
     break
 
-user_inputs_1 = menu()
+user_inputs_1 = Menu()
 while exit_clause == False:    
     user_inputs_1.request_inputs()
     exit_clause = user_inputs_1.print_menu_input()
@@ -237,7 +237,7 @@ while exit_clause == False:
 exit_clause = False
 if num_of_graphs == 2:
     print('Now select your second input options')
-    user_inputs_2 = menu()
+    user_inputs_2 = Menu()
     while exit_clause == False:     
         user_inputs_2.request_inputs()
         exit_clause = user_inputs_2.print_menu_input()
@@ -272,7 +272,7 @@ if user_inputs_1.graph_choice == 'Bar Graph':
                 count += 1
         values_to_graph.append(count)
         names_to_graph = focus_group_choices[user_inputs_1.focus_group]
-    bar_graph(values_to_graph, names_to_graph, num_of_graphs, 1, f'Total Passing Grades by Focus Group')
+    bar_graph(values_to_graph, names_to_graph, 1, f'Total Passing Grades by Focus Group')
 
 if user_inputs_1.graph_choice == 'Histogram':
     values_to_graph = []
@@ -280,7 +280,7 @@ if user_inputs_1.graph_choice == 'Histogram':
         sorted_list = sort_list(computeing_array_1, group)    
         values_to_graph = histogram_values(sorted_list)
         names_to_graph = np.linspace(0, 100, 101)
-    histogram(values_to_graph, names_to_graph, num_of_graphs, 1, 'Tallies of each grade recieved')
+    histogram(values_to_graph, names_to_graph, 1, 'Tallies of each grade recieved')
 
 #INSERT USER CHOSEN GRAPH HERE
 
@@ -307,15 +307,15 @@ if num_of_graphs == 2:
                     count += 1
             values_to_graph.append(count)
             names_to_graph = focus_group_choices[user_inputs_2.focus_group]
-        bar_graph(values_to_graph, names_to_graph, num_of_graphs, 2, f'Total Passing Grades by Focus Group')
+        bar_graph(values_to_graph, names_to_graph, 2, f'Total Passing Grades by Focus Group')
 
-    if user_inputs_1.graph_choice == 'Histogram':
+    if user_inputs_2.graph_choice == 'Histogram':
         values_to_graph = []
         for group in focus_group_choices[user_inputs_2.focus_group]:
             sorted_list = sort_list(computeing_array_2, group)    
             values_to_graph = histogram_values(sorted_list)
             names_to_graph = np.linspace(0, 100, 101)
-        histogram(values_to_graph, names_to_graph, num_of_graphs, 2, 'Tallies of each grade recieved')
+        histogram(values_to_graph, names_to_graph, 2, 'Tallies of each grade recieved')
 
 
     
