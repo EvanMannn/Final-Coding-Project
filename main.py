@@ -8,6 +8,14 @@ from graphing_functions import bar_graph
 
 class Menu:
 
+    '''
+    Summary:
+        A class used to store the inputs of a user to be called later by the program.
+    
+    Arguments:
+        None
+    '''
+
     def __init__(self):
         self.test_choice = ''
         self.focus_group = ''
@@ -50,13 +58,13 @@ CHOSEN MENU OPTIONS:
     def request_inputs(self):
         '''
         Summary: 
-            Function to request the inputs for time period and country from the user.
+            Function to request the inputs from the user.
         
         Parameters: 
-            Self, List of countries 
+            Self
 
         Returns: 
-            Tuple containing self.time and self.country
+            None
         '''
         valid_input = False
         while valid_input == False:
@@ -301,7 +309,7 @@ if user_inputs_1.graph_choice == 'Histogram': #creates a histogram graph if the 
         sorted_list = sort_list(computeing_array_1, group)      #creates a list of the grades for that group in the requested data set
         values_to_graph = histogram_values(sorted_list)         #creates a list of the number of grades within each 5% intervul
         names_to_graph = [5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100]  #list for the x_values
-        histogram(values_to_graph, names_to_graph, len(focus_group_choices[user_inputs_1.focus_group]), count, str(f' {group} grades',))
+        histogram(values_to_graph, names_to_graph, len(focus_group_choices[user_inputs_1.focus_group]), count, str(f'{group} sub-section of {user_inputs_1.focus_group}',))
         #creates the histogram using the y_values created earlier as 'values_to_graph', the x_values as 'names_to_graph', the total number of subgraphs in the len() function
         #'count' is the position of the current subplot, and last is part of the title for the graph
 
@@ -344,7 +352,7 @@ if num_of_graphs == 2: #the same two steps are repeated here but for the second 
             sorted_list = sort_list(computeing_array_2, group)          #creates a list of the grades for that group in the requested data set
             values_to_graph = histogram_values(sorted_list)             #creates a list of the number of grades within each 5% intervul
             names_to_graph = [5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100] #list for the x_values
-            histogram(values_to_graph, names_to_graph, len(focus_group_choices[user_inputs_2.focus_group]), pos_count, str(f' {group} grades',))
+            histogram(values_to_graph, names_to_graph, len(focus_group_choices[user_inputs_2.focus_group]), pos_count, str(f'{group} sub-section of {user_inputs_1.focus_group}'))
             #creates the histogram using the y_values created earlyier as 'values_to_graph', the x_values as 'names_to_graph', the total number of subgraphs in the len() function
             #'count' is the position of the current subplot, and last is part of the title for the graph
 
