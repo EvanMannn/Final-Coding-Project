@@ -69,9 +69,10 @@ CHOSEN MENU OPTIONS:
             break
             
         while valid_input == False:
-            self.focus_group = input('Now please input the focus group you wish to analyze [Gender, Ethnicity, Parent Education, Lunch, Test Prep] -> ').title().strip() #Asks for focus group input
+            valid_choices = [element for element in focus_group_choices.keys()]
+            self.focus_group = input(f'Now please input the focus group you wish to analyze {valid_choices} -> ').title().strip() #Asks for focus group input
             print()
-            if self.focus_group not in ['Gender', 'Ethnicity', 'Parent Education', 'Lunch', 'Test Prep']:   #If the input is not in this list the program asks for a new one
+            if self.focus_group not in focus_group_choices.keys():   #If the input is not in this list the program asks for a new one
                 print('Invalid entry, please try again')
                 print()
                 continue
@@ -167,8 +168,6 @@ def sort_list(input_list,keyword):
     for each_student in input_list:                                             #grabs each list within the input_list in a for loop
         if each_student[0]==keyword:     #then checks if the first value of that list matches the keyword in string form and is manually striped of it's byte notation ("b'")
             output_list.append(each_student[1])                                 #if true the second value in the list is then appended to the output_list to be returned
-    #print('sort list function return') #~~Evan Testing~~#
-    #print(output_list) #~~Evan Testing~~#
     return output_list
 
 
@@ -203,28 +202,26 @@ def histogram_values(input_list):
     return (output_list)    #returns the output_list as an array
 
 
-
-
-
 #Importing Data
 writing_score_array=np.genfromtxt('Writing Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
 math_score_array=np.genfromtxt('Reading Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
 reading_score_array=np.genfromtxt('Math Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
-#writing_score_array=np.genfromtxt('.venv\Writing Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
-#math_score_array=np.genfromtxt('.venv\Math Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
-#reading_score_array=np.genfromtxt('.venv\Reading Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
 
 #exit clause for the menu loop
 exit_clause = False
 
-#Focus group lists. When a focus group is chosen a corosponding list is passed to any fucntions that require it so that each focus group is analyzed individually
-focus_group_choices={
-    'Gender':['male','female'],
-    'Ethnicity':['group A','group B','group C','group D','group E'],
-    'Parent Education':["bachelor's degree",'some college',"master's degree","associate's degree",'high school'],
-    'Lunch':['standard','free/reduced'],
-    'Test Prep':['none','completed']
-    }
+#Creating a dictionary of focus groups and their corosponding subsections
+#This is used in the program to both check users entries and make sure they are a correct focus group as well as pass the lists of values to functions for analysis and graphing
+writing_score_array_with_header=np.genfromtxt('Writing Scores.csv', delimiter=',', encoding='utf-8', dtype=str)
+
+focus_group_choices={}                                          #Creats an empty dictionary
+for i in range(1,6):                                            #For loop to iterate over each coloumn
+    focus_group = writing_score_array_with_header[0,i].title()  #Stores the focus group
+    sub_sections = []                                           #Creates an empty list for the sub sections
+    for item in writing_score_array_with_header[1:, i]:         #Iterates through the coloum of a focus group
+        if item not in sub_sections:                            #Every time it finds a new type of item it adds it to list 
+            sub_sections.append(item)
+    focus_group_choices[focus_group]=sub_sections               #Finally creates a new dictionary entry with the key being the focus group and the value being the list of sub sections
 
 
 print('''

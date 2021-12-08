@@ -1,4 +1,4 @@
-Student Number:,gender,race/ethnicity,parental level of education,lunch,test preparation course,reading score
+Student Number:,gender,ethnicity,parent education,lunch,test prep,writing score
 1,female,group B,bachelor's degree,standard,none,72
 2,female,group C,some college,standard,completed,90
 3,female,group B,master's degree,standard,none,95
