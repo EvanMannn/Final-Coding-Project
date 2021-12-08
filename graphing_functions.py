@@ -23,7 +23,8 @@ def histogram(values, names, num_of_graphs, pos, title):
     plt.tight_layout(pad=1.5)               #Spaces the graph within the figure 
     plt.xlabel('Percentage Ranges')         #Labels the x axis
     plt.ylabel('Total Count')               #Labels the y axis
-    plt.title(f'Histogram of{title}')       #Titles the graph
+    completed_title = f'Histogram of percentile ranges \nfor the {title}'
+    plt.title(f'{completed_title:^}')       #Titles the graph
 
 
 def bar_graph(values, names, title):
