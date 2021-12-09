@@ -1,10 +1,7 @@
+#LO5 21 Ethan Lyons, Evan Mann
+
 import numpy as np
 import matplotlib.pyplot as plt
-from graphing_functions import histogram
-from graphing_functions import bar_graph
-#from graphing_functions import scatter
-
-
 
 class Menu:
 
@@ -193,19 +190,66 @@ def histogram_values(input_list):
     percent_group_list=[5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,101]
     output_list=[]
     count=0
-    for percent in range(percent_group_list[0]):
-            for element in input_list:
+    for percent in range(percent_group_list[0]):    #this for loop is exclusively for percents before the 5% range, as If i used the for loop below it the index would be out of range
+            for element in input_list:              #the for loop goes through each percent form the range of 0-5, if any of the elements in the imput list matches this percent it is counted
                 if int(element) == percent:
                     count+=1
-    output_list.append(count)
-    for group_pos in range(1,20):
-        count=0
-        for percent in range(percent_group_list[group_pos-1],percent_group_list[group_pos]):
+    output_list.append(count)       #then this value is appended after the entire range from 0-5 is countet
+    for group_pos in range(1,20):   #this for loop is for the rest of the values (5-100)
+        count=0                     #tally is set back to 0 after each 5% range
+        for percent in range(percent_group_list[group_pos-1],percent_group_list[group_pos]): #this grabs each percent between a range of 5% from eachother, so if the current group_pos=3, the system would test between ranges 15% to 20%
             for element in input_list:
-                if int(element) == percent:
+                if int(element) == percent:     #if any element is the same as the test percent the count goes up
                     count+=1
-        output_list.append(count)
-    return (output_list)    #returns the output_list as an array
+        output_list.append(count)               #then the count is appended to the output list after each 5% range
+    return (output_list)    #returns the output_list
+
+def histogram(values, names, num_of_graphs, pos, title):
+    '''
+    Summary:
+        A function to produce a histogram of a chosen data set
+
+    Parameters:
+        values (list of values), names (list of names), num_of_graphs (int, number of graphs within the figure),
+    pos (int, the position of the graph within the figure), title (str, title of the graph)
+
+    returns:
+        None
+    '''
+    if num_of_graphs > 2:                   #Determines if the figure should be formatted with 1 row or 2
+        if num_of_graphs > 6:
+            plt.subplot(3,3, pos)
+        else:
+            plt.subplot(2, 3, pos)              #If there are more than 2 graphs a second row is insetered for cleaner formatting
+    else:
+        plt.subplot(1, num_of_graphs, pos)  #Else only one row of graphs is needed. This row is made with a length equal to the number of graphs
+    
+    cividis = plt.get_cmap('cividis', 20)    #Creating a colormap
+    plt.bar(names, values, width=5, color=cividis(np.linspace(1,0,20))) #Plots the values with their corosponding names. This function also makes each bar a width of 3 and gives each a unique color from the colormap
+    plt.tight_layout(pad=1.5)               #Spaces the graph within the figure 
+    plt.xlabel('Percentage Ranges')         #Labels the x axis
+    plt.ylabel('Total Count')               #Labels the y axis
+    completed_title = f'Histogram of percentile ranges \nfor the {title}'
+    plt.title(f'{completed_title:^}')       #Titles the graph
+
+
+def bar_graph(values, names, title):
+    '''
+    Summary:
+        A function to produce a bar graph of a chosen data set
+
+    Parameters:
+        values (list of values), names (list of names), title (str, title of the graph)
+
+    returns:
+        None
+    '''
+    accent = plt.get_cmap('Accent', 8)  #Creates a colormap
+    plt.bar(names, values, width=0.3, color=accent(range(8)))   #Plots the values for the graph with the corosponding names and assigns each bar a unique color
+    plt.ylabel('Total Count')           #Labels the y axis
+    plt.xticks(rotation=22)             #Rotates the labels of each bar so that they don't overlap
+    plt.title(f'{title}')               #Titles the graph
+
 
 def main():
     #Importing Data
@@ -235,6 +279,7 @@ def main():
                 sub_sections.append(item)
         focus_group_choices[focus_group]=sub_sections               #Finally creates a new dictionary entry with the key being the focus group and the value being the list of sub sections
 
+    
 
     print('''
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -361,6 +406,7 @@ def main():
                 #creates the histogram using the y_values created earlier as 'values_to_graph', the x_values as 'names_to_graph', the total number of subgraphs in the len() function, the graph position and the title
             
     plt.show()
+
 
 if __name__ == '__main__':
     main()
