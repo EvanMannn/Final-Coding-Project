@@ -25,9 +25,8 @@ class Menu:
     def print_menu_input(self):
         '''
         Summary: 
-            A function to ask the user if they are content with their selections of data and data 
-        analysis type. If the user inputs no, the function will return False which is read by the program telling it to 
-        re-request inputs. 
+            A function to ask the user if they are content with their selections of data and data analysis type
+        If the user inputs no, the function will return False which is read by the program telling it to re-request the inputs. 
         
         Parameters: 
             Self
@@ -69,7 +68,7 @@ CHOSEN MENU OPTIONS:
         '''
         valid_input = False
         while valid_input == False:
-            self.test_choice = input('Please input the test you wish to analyze [Math, Writing, Reading] -> ').title().strip() #Asks for an test input
+            self.test_choice = input('Please input the test you wish to analyze [Math, Writing, Reading] -> ').title().strip() #Asks for the test input
             print()
             if self.test_choice not in ['Math', 'Writing', 'Reading']:  #If the input is not in this list the program asks for a new one
                 print('Invalid entry, please try again')
@@ -79,7 +78,7 @@ CHOSEN MENU OPTIONS:
             
         while valid_input == False:
             valid_choices = [element for element in focus_group_choices]
-            self.focus_group = input(f'Now please input the focus group you wish to analyze {valid_choices} -> ').title().strip() #Asks for focus group input
+            self.focus_group = input(f'Now please input the focus group you wish to analyze {valid_choices} -> ').title().strip() #Asks for the focus group input
             print()
             if self.focus_group not in focus_group_choices:   #If the input is not in this list the program asks for a new one
                 print('Invalid entry, please try again')
@@ -110,13 +109,12 @@ CHOSEN MENU OPTIONS:
 def data_list_generator(focus_group, grade_array, array_dict):
     '''
     Summary: 
-        A function to go through a requested array (though the string 'grade_array') to match a value to a list of possible 'keywords' within a given list,
-    when found, a list is created with he first value being the found 'keyword' (something like 'male' or 'female') and the second value is the 7th column (being the grade)
+        A function to go through a requested array (through the string 'grade_array') to match a value to a list of possible 'keywords' within a given list
+    When found, a list is created with the first value being the found 'keyword' (something like 'male' or 'female') and the second value is the 7th column (being the grade)
     this list is then appended to another list to be returned.
-    It basically grabs only the necessary data for the program
 
     Args:
-        focus_group (list): A list of all requested bytes the function needs to locate (Example: 'must extract all necessary data for Gender' then focus_group=[d'male, d'female])
+        focus_group (list): A list of all requested data the function needs to locate (Example: 'must extract all necessary data for Gender' then focus_group=[male, female])
     grade_array (str): A string that must be one of the folowing: 'Writing', 'Math', or 'Reading'. This pertains to the grade array the user would like to pull information from
     array_dict (dict): A dictionary containing the three CSV files as numpy arrays
 
@@ -126,18 +124,19 @@ def data_list_generator(focus_group, grade_array, array_dict):
     
 
     output_list=[]
-    for pos_1 in range(len(array_dict[grade_array][:,0])):      #these two for loops goes through each value of a 299x7 array, first loop is for the 300 rows
-        for pos_2 in range(len(array_dict[grade_array][0,:])):    #and the second is for the 7 columns
-            if array_dict[grade_array][pos_1][pos_2] in focus_group:                            #checks to see if the requested array (called using the array_dict) matches any of the bytes in the focus_group list
-                #if true a list is made then appended to a larger list
-                x=str(array_dict[grade_array][pos_1][pos_2]) #first value of the smaller list is the found byte converted to a string and manually striped of it's byte notation ("b'")
-                output_list.append([x,array_dict[grade_array][pos_1][6]])                       #second value is the grade in that row (found in column 6) then the list is appended into the larger list to be returned
+    for pos_1 in range(len(array_dict[grade_array][:,0])):                #these two for loops goes through each value of an array, first for the rows
+        for pos_2 in range(len(array_dict[grade_array][0,:])):            #and the second is for the columns
+            if array_dict[grade_array][pos_1][pos_2] in focus_group:      #checks to see if the requested array (called using the array_dict) matches any of the data in the focus_group list
+                                                                          #if true a list is made then appended to a larger list
+                x=str(array_dict[grade_array][pos_1][pos_2])              #first value of the smaller list is the found data
+                output_list.append([x,array_dict[grade_array][pos_1][6]]) #second value is the grade in that row. Then the list is appended into the larger list to be returned
     return output_list
 
 
 
 def analysis(input_list,analysis_type):
-    '''Summary: 
+    '''
+    Summary: 
         A function that preformes one of the possible calculations on an array: min, max, or mean
 
     Args:
@@ -166,15 +165,15 @@ def sort_list(input_list,keyword):
 
     Args:
         input_list (list): A list where the values are lists whose values are a string and an int (example: =[['male', 80.0], ['female', 64.0]])
-    keyword (byte): A byte that will be converted to a string then used by the program to find matching values within input_list
+    keyword (str): A string that will be used by the program to find matching values within input_list
 
     Returns:
         output_list (list): a list of int values (grades) for each of the extracted students that meet the keyword
     '''
     output_list=[]
-    for each_student in input_list:                                             #grabs each list within the input_list in a for loop
-        if each_student[0]==keyword:     #then checks if the first value of that list matches the keyword in string form and is manually striped of it's byte notation ("b'")
-            output_list.append(each_student[1])                                 #if true the second value in the list is then appended to the output_list to be returned
+    for each_student in input_list:             #grabs each list within the input_list in a for loop
+        if each_student[0]==keyword:            #then checks if the first value of that list matches the keyword
+            output_list.append(each_student[1]) #if true the second value in the list is then appended to the output_list to be returned
     return output_list
 
 
@@ -182,7 +181,7 @@ def sort_list(input_list,keyword):
 def histogram_values(input_list):
     '''
     Summary: 
-        A function that counts each time any of the values within the input_list is between 0-100 and returns a list of 20 values, where each value is the number of times the value was found in the input_list that are within 5 unit intervals
+        A function that counts each time any of the values within the input_list is within a percentile range and returns a list of 20 values, where each value is the number of times the value was found in the input_list that are within 5 unit intervals
 
     Args:
         input_list (list): A list where the values are floats that are between 0-100
@@ -214,7 +213,8 @@ def main():
     math_score_array=np.genfromtxt('Reading Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
     reading_score_array=np.genfromtxt('Math Scores.csv',skip_header = True, delimiter=',', encoding='utf-8', dtype=str)
 
-    array_dict={                        #Dictionary to call the correct array for a given string as the key
+    #Dictionary to call the correct array for a given string as the key
+    array_dict={
         'Writing':writing_score_array,
         'Math':math_score_array,
         'Reading':reading_score_array}
@@ -262,10 +262,10 @@ def main():
         print()
         break
 
-    user_inputs_1 = Menu()                              #Creates a new menu class instance to hold the users first inputs
+    user_inputs_1 = Menu()      #Creates a new menu class instance to hold the users first inputs
     while exit_clause == False:                         
-        user_inputs_1.request_inputs(focus_group_choices.keys())                  #Calls the request_inputs function from the menu class to collect the user inputs
-        exit_clause = user_inputs_1.print_menu_input()  #Checks that the user is satisfied with their inputs, if no is inputted the request_inputs function is called again, if yes is inputted the program continues
+        user_inputs_1.request_inputs(focus_group_choices.keys())    #Calls the request_inputs function from the menu class to collect the user inputs
+        exit_clause = user_inputs_1.print_menu_input()              #Checks that the user is satisfied with their inputs, if no is inputted the request_inputs function is called again, if yes is inputted the program continues
 
     exit_clause = False
     if num_of_graphs == 2:  #If the user selected that they wanted to analyze two graphs a second menu instance is created to collect their second inputs
@@ -307,17 +307,18 @@ def main():
     if user_inputs_1.graph_choice == 'Histogram': #creates a histogram graph if the user requests it for the first data
         plt.figure(1)
         values_to_graph = []
-        count=0
+        graph_pos=0     #Position of the current graph, this gets incremented in every iteration of the following loop
         for group in focus_group_choices[user_inputs_1.focus_group]:    #this grabs each of the groups (example: male and female)
-            count+=1
+            graph_pos+=1
             sorted_list = sort_list(computeing_array_1, group)      #creates a list of the grades for that group in the requested data set
-            values_to_graph = histogram_values(sorted_list)         #creates a list of the number of grades within each 5% intervul
+            values_to_graph = histogram_values(sorted_list)         #creates a list of the number of grades within each 5% interval
             names_to_graph = [5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100]  #list for the x_values
-            histogram(values_to_graph, names_to_graph, len(focus_group_choices[user_inputs_1.focus_group]), count, str(f'{group} sub-section of {user_inputs_1.focus_group}',))
-            #creates the histogram using the y_values created earlier as 'values_to_graph', the x_values as 'names_to_graph', the total number of subgraphs in the len() function
-            #'count' is the position of the current subplot, and last is part of the title for the graph
+            histogram(values_to_graph, names_to_graph, len(focus_group_choices[user_inputs_1.focus_group]), graph_pos, str(f'{group} sub-section of {user_inputs_1.focus_group}'))
+            #creates the histogram using the y_values created earlier as 'values_to_graph', the x_values as 'names_to_graph', the total number of subgraphs in the len() function, the graph position and the title
+            
 
     #OUTPUS FOR SECOND USER INPUTS
+    #This is the exact same code but runs using the second instance of the class menu if it exists
 
     if num_of_graphs == 2: #the same two steps are repeated here but for the second graphs and second data sets
         plt.figure(2)
@@ -350,25 +351,16 @@ def main():
         if user_inputs_2.graph_choice == 'Histogram':   #creates a histogram graph if the user requests it for the second data
             plt.figure(2)
             values_to_graph = []
-            pos_count=0
+            graph_pos=0
             for group in focus_group_choices[user_inputs_2.focus_group]:    #this grabs each of the groups (example: male and female)
-                pos_count+=1
+                graph_pos+=1
                 sorted_list = sort_list(computeing_array_2, group)          #creates a list of the grades for that group in the requested data set
-                values_to_graph = histogram_values(sorted_list)             #creates a list of the number of grades within each 5% intervul
+                values_to_graph = histogram_values(sorted_list)             #creates a list of the number of grades within each 5% interval
                 names_to_graph = [5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100] #list for the x_values
-                histogram(values_to_graph, names_to_graph, len(focus_group_choices[user_inputs_2.focus_group]), pos_count, str(f'{group} sub-section of {user_inputs_1.focus_group}'))
-                #creates the histogram using the y_values created earlyier as 'values_to_graph', the x_values as 'names_to_graph', the total number of subgraphs in the len() function
-                #'count' is the position of the current subplot, and last is part of the title for the graph
-
-
+                histogram(values_to_graph, names_to_graph, len(focus_group_choices[user_inputs_2.focus_group]), graph_pos, str(f'{group} sub-section of {user_inputs_1.focus_group}'))
+                #creates the histogram using the y_values created earlier as 'values_to_graph', the x_values as 'names_to_graph', the total number of subgraphs in the len() function, the graph position and the title
+            
     plt.show()
 
-    #so i finished the graphs to 1.work (as it they don't break and the histogram is now measuring in 5% intervals), and 2.look pretty
-    #I changed the functionality of the histogram_values function, messed with lines 270-335, and made some changes to the graphing_functions.py
-    #I was also trying to set up the scatter graph, then while testing i realized that the scatter will look super stupid and display like no relevant information, so if u wanna try to get that going
-    #   I left my work hashed out in lines 57-63 (i moved the input to ask for a scatter into the class so that it would ask twice if 2 graphs were selected by user) lines 337-344, and lines 25-26 in the graphing_functions.py
-    #   (ur also gonna need to unhash line 5 if u wanna try the scatter for the function import)
-    # i've commented most of my lines, ik most of urs is done but some stuff isn't commented yet so when you get the chance if u can finish the commenting that would be coooool
-    #also removed the import sort line at like line 4 or som, we weren't using it so idk
-    #i also think we should just move the graphing functions form graphing_funcitons.py to the main.py, just so the markers have an easyier time but it works as is
-    #i'd say after we finish comments and make the write up we are done, unless u can think of something or do think we need the scatter
+if __name__ == '__main__':
+    main()

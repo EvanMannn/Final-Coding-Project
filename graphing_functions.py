@@ -14,12 +14,15 @@ def histogram(values, names, num_of_graphs, pos, title):
         None
     '''
     if num_of_graphs > 2:                   #Determines if the figure should be formatted with 1 row or 2
-        plt.subplot(2, 3, pos)              #If there are more than 2 graphs a second row is insetered for cleaner formatting
+        if num_of_graphs > 6:
+            plt.subplot(3,3, pos)
+        else:
+            plt.subplot(2, 3, pos)              #If there are more than 2 graphs a second row is insetered for cleaner formatting
     else:
         plt.subplot(1, num_of_graphs, pos)  #Else only one row of graphs is needed. This row is made with a length equal to the number of graphs
     
-    rainbow = plt.get_cmap('rainbow', 8)    #Creating a colormap
-    plt.bar(names, values, width=3, color=rainbow(np.linspace(1,0,15))) #Plots the values with their corosponding names. This function also makes each bar a width of 3 and gives each a unique color from the colormap
+    cividis = plt.get_cmap('cividis', 20)    #Creating a colormap
+    plt.bar(names, values, width=5, color=cividis(np.linspace(1,0,20))) #Plots the values with their corosponding names. This function also makes each bar a width of 3 and gives each a unique color from the colormap
     plt.tight_layout(pad=1.5)               #Spaces the graph within the figure 
     plt.xlabel('Percentage Ranges')         #Labels the x axis
     plt.ylabel('Total Count')               #Labels the y axis
